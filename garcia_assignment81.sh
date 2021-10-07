@@ -43,26 +43,40 @@ echo "Starting mariadb"
 systemctl start mariadb
 
 echo "Installation of mysql securities"
-mysql_secure_installation
+mysql_secure_installation <<EOF 
+
+y
+ramstein
+ramstein
+y
+y
+y
+y
+EOF
+
 
 echo "Enabling mariadb upon starup"
 systemctl enable mariadb
 
+psswd=ramstein
 
 echo "checking mysql version"
-mysqladmin -u root -p version
+mysqladmin -u root -p$psswd version
 
 echo   "########################"
 echo   "##Accessing MySQL root##"
 echo   "########################"
-mysql -u root -p
+
+
+echo "CREATE DATABASE wordpress; CREATE USER wordpressmiguel@localhost IDENTIFIED by 'ramstein'; GRANT ALL PRIVILEGES ON wordpress.* TO wordpressmiguel@localhost IDENTIFIED by 'ramstein'; FLUSH PRIVILEGES; "| mysql -u root -p$psswd
+
 
 
 echo   "##########################"
 echo   "##Installing php Modules##"
 echo   "##########################"
 yum install -y php-gd
-yum install php-fpm
+yum install -y php-fpm
 cd /var/www/html/
 echo "<?php phpinfo(); ?>" >> info.php
 
@@ -112,7 +126,11 @@ cp wp-config-sample.php wp-config.php
 echo   "######################"
 echo   "##Edit wp-config.php##"
 echo   "######################"
-vi wp-config.php
+
+cd cd /var/www/html/
+sed -i 's/database_name_here/wordpress/g' wp-config.php
+sed -i 's/username_here/wordpressmiguel/g' wp-config.php
+sed -i 's/password_here/ramstein/g' wp-config.php
 
 
 
