@@ -75,14 +75,17 @@ echo "CREATE DATABASE wordpress; CREATE USER wordpressmiguel@localhost IDENTIFIE
 echo   "##########################"
 echo   "##Installing php Modules##"
 echo   "##########################"
-yum install -y php-gd
-yum install -y php-fpm
+
+
 cd /var/www/html/
 echo "<?php phpinfo(); ?>" >> info.php
+yum install -y php-gd
+yum install -y php-fpm
 
 
 
-echo 'restart httpd service'
+
+echo 'restarting httpd service'
 systemctl restart httpd.service
 
 echo   "###################"
